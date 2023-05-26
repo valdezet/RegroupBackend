@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33712.159
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegroupBackend", "RegroupBackend\RegroupBackend.csproj", "{61D478FE-51F3-4B80-B80F-FF6241671C6D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{61D478FE-51F3-4B80-B80F-FF6241671C6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61D478FE-51F3-4B80-B80F-FF6241671C6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61D478FE-51F3-4B80-B80F-FF6241671C6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61D478FE-51F3-4B80-B80F-FF6241671C6D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FFA4AC19-F67C-45D1-9224-F147234EE6B5}
+	EndGlobalSection
+EndGlobal
