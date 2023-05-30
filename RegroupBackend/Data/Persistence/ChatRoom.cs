@@ -10,9 +10,11 @@ namespace RegroupBackend.Data.Persistence
         [StringLength(50)]
         public required string Name { get; set; }
 
-        public required ICollection<ChatRoomUser> Users { get; set; }
+        public ICollection<ChatRoomUser> Users { get; set; } = new List<ChatRoomUser>();
 
-        public required ICollection<ChatRoomMessages> Messages { get; set; }
+        public ICollection<ChatRoomMessage> Messages { get; set; } = new List<ChatRoomMessage>();
+
+        public ICollection<ChatRoomInvite> Invites { get; set; } = new List<ChatRoomInvite>();
 
         public DateTime ClosesAtUtc { get; set; }
 

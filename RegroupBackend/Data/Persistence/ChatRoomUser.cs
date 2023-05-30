@@ -1,8 +1,10 @@
-﻿namespace RegroupBackend.Data.Persistence
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace RegroupBackend.Data.Persistence
 {
     public class ChatRoomUser
     {
-        public required Guid Id { get; set; }
+        public Guid Id { get; set; }
 
         public required Guid UserId { get; set; }
 

@@ -12,7 +12,7 @@ using RegroupBackend.Data.Persistence;
 namespace RegroupBackend.Migrations
 {
     [DbContext(typeof(RegroupDbContext))]
-    [Migration("20230527160432_CreateAppSchema")]
+    [Migration("20230530220036_CreateAppSchema")]
     partial class CreateAppSchema
     {
         /// <inheritdoc />
@@ -44,7 +44,7 @@ namespace RegroupBackend.Migrations
                     b.ToTable("ChatRooms");
                 });
 
-            modelBuilder.Entity("RegroupBackend.Data.Persistence.ChatRoomInvites", b =>
+            modelBuilder.Entity("RegroupBackend.Data.Persistence.ChatRoomInvite", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -63,7 +63,7 @@ namespace RegroupBackend.Migrations
                     b.ToTable("ChatRoomInvites");
                 });
 
-            modelBuilder.Entity("RegroupBackend.Data.Persistence.ChatRoomMessages", b =>
+            modelBuilder.Entity("RegroupBackend.Data.Persistence.ChatRoomMessage", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -114,10 +114,10 @@ namespace RegroupBackend.Migrations
                     b.ToTable("ChatRoomUsers");
                 });
 
-            modelBuilder.Entity("RegroupBackend.Data.Persistence.ChatRoomInvites", b =>
+            modelBuilder.Entity("RegroupBackend.Data.Persistence.ChatRoomInvite", b =>
                 {
                     b.HasOne("RegroupBackend.Data.Persistence.ChatRoom", "ChatRoom")
-                        .WithMany()
+                        .WithMany("Invites")
                         .HasForeignKey("ChatRoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -125,7 +125,7 @@ namespace RegroupBackend.Migrations
                     b.Navigation("ChatRoom");
                 });
 
-            modelBuilder.Entity("RegroupBackend.Data.Persistence.ChatRoomMessages", b =>
+            modelBuilder.Entity("RegroupBackend.Data.Persistence.ChatRoomMessage", b =>
                 {
                     b.HasOne("RegroupBackend.Data.Persistence.ChatRoom", "Room")
                         .WithMany("Messages")
@@ -157,6 +157,8 @@ namespace RegroupBackend.Migrations
 
             modelBuilder.Entity("RegroupBackend.Data.Persistence.ChatRoom", b =>
                 {
+                    b.Navigation("Invites");
+
                     b.Navigation("Messages");
 
                     b.Navigation("Users");

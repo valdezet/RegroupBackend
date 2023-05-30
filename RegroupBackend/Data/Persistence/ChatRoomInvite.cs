@@ -1,6 +1,6 @@
 ﻿namespace RegroupBackend.Data.Persistence
 {
-    public class ChatRoomInvites
+    public class ChatRoomInvite
     {
         public Guid Id { get; set; }
 

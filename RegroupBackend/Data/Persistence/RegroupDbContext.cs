@@ -6,11 +6,11 @@ public class RegroupDbContext : DbContext
 {
     public DbSet<ChatRoom> ChatRooms { get; set; }
 
-    public DbSet<ChatRoomMessages> ChatRoomMessages { get; set; }
+    public DbSet<ChatRoomMessage> ChatRoomMessages { get; set; }
 
     public DbSet<ChatRoomUser> ChatRoomUsers { get; set; }
 
-    public DbSet<ChatRoomInvites> ChatRoomInvites { get; set; }
+    public DbSet<ChatRoomInvite> ChatRoomInvites { get; set; }
 
     public RegroupDbContext(DbContextOptions<RegroupDbContext> options) : base(options) { }
 
@@ -18,7 +18,7 @@ public class RegroupDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<ChatRoomMessages>()
+        modelBuilder.Entity<ChatRoomMessage>()
             .HasOne(message => message.Room)
             .WithMany(room=> room.Messages)
             .OnDelete(DeleteBehavior.NoAction);
