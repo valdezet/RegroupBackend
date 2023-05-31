@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RegroupBackend.Data.Dto;
 using RegroupBackend.Data.Persistence;
+using RegroupBackend.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -10,10 +11,13 @@ namespace RegroupBackend.Controllers
     [ApiController]
     public class ChatRoomController : ControllerBase
     {
-        private RegroupDbContext _dbContext;
-        public ChatRoomController(RegroupDbContext dbContext) : base()
+        private ChatRoomService _chatRoomService;
+        private InvitationService _invitationService;
+
+        public ChatRoomController(ChatRoomService chatRoomService, InvitationService invitationService) : base()
         {
-            _dbContext = dbContext;
+            _chatRoomService = chatRoomService;
+            _invitationService = invitationService;
         }
 
         // GET: api/<ChatRoomController>
@@ -34,13 +38,13 @@ namespace RegroupBackend.Controllers
         [HttpPost]
         public async Task<ChatRoomCreated> Post(NewChatRoomRequest formData)
         {
-            ChatRoom room = new ChatRoom() { Name = formData.Name, ClosesAtUtc = DateTime.UtcNow.AddDays(1).ToUniversalTime() };
-            ChatRoomInvite invite = new ChatRoomInvite { ChatRoom = room, ExpiresAtUtc = DateTime.UtcNow.AddHours(3) };
-            await _dbContext.ChatRooms.AddAsync(room);
-            await _dbContext.ChatRoomInvites.AddAsync(invite);
-            await _dbContext.SaveChangesAsync();
-            return new ChatRoomCreated() { RoomId = room.Id, InviteId = invite.Id };
-
+            ChatRoom room = await _chatRoomService.CreateNewRoom(formData.Name);
+            ChatRoomInvite invite = await _invitationService.CreateNewInviteRaw(room);
+            return new ChatRoomCreated
+            {
+                RoomId = room.Id,
+                InviteId = invite.Id
+            };
         }
 
         // PUT api/<ChatRoomController>/5

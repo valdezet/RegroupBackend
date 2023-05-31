@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using RegroupBackend.Data.Dto;
 using RegroupBackend.Data.Persistence;
-using System.Runtime.CompilerServices;
+using RegroupBackend.Services;
 
 namespace RegroupBackend.Controllers
 {
@@ -10,60 +9,28 @@ namespace RegroupBackend.Controllers
     [Route("api/[controller]")]
     public class InviteController : Controller
     {
-        private RegroupDbContext _db;
+        private InvitationService _invitationService;
+        private ChatRoomService _chatRoomService;
 
-        public InviteController(RegroupDbContext context) : base()
+        public InviteController(InvitationService inviteService, ChatRoomService chatRoomService) : base()
         {
-            _db = context;
+            _invitationService = inviteService;
+            _chatRoomService = chatRoomService;
         }
 
         [HttpGet]
         public async Task<InviteInfo> Index([FromQuery] InviteInfoRequest request)
         {
-            ChatRoomInvite invite = await _db.ChatRoomInvites
-                .Where(inv => inv.Id.Equals(request.InviteId))
-                .Include(inv => inv.ChatRoom)
-                .FirstAsync();
-            DateTime currentTime = DateTime.UtcNow;
-            var timeDiff = currentTime - invite.ExpiresAtUtc;
-
-            if (timeDiff >= TimeSpan.Zero)
-            {
-                throw new BadHttpRequestException("This invite is expired. You may request for another invite from one of the members of the chat.");
-            }
-
-            return new InviteInfo { ChatRoomName = invite.ChatRoom.Name, ExpiresAt = invite.ExpiresAtUtc };
-
+            return await _invitationService.GetInviteInfo(request.InviteId);
         }
 
         [HttpPost]
         [Route("{InviteId}/accept")]
         public async Task<Guid> AcceptInvite([FromRoute] Guid inviteId, AcceptInviteRequest request)
         {
-            ChatRoomInvite invite = await _db.ChatRoomInvites
-                .Where(inv => inv.Id.Equals(inviteId))
-                .Include(inv => inv.ChatRoom)
-                .ThenInclude(room => room.Users)
-                .FirstAsync();
+            ChatRoomInvite invite = await _invitationService.GetActiveInviteRaw(inviteId);
 
-            if (DateTime.UtcNow >= invite.ExpiresAtUtc)
-            {
-                throw new BadHttpRequestException("This invite is expired. You may request for another invite from one of the members of the chat.");
-            }
-
-            invite.ChatRoom.Users.Add(
-                new ChatRoomUser
-                {
-                    UserId = request.UserId,
-                    Name = request.Username,
-                    ChatRoom = invite.ChatRoom
-                }
-            );
-
-            await _db.SaveChangesAsync();
-
-            return invite.ChatRoom.Id;
-
+            return await _chatRoomService.AddUser(invite, request.UserId, request.Username);
         }
     }
 }
