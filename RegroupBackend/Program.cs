@@ -1,6 +1,7 @@
 
 
 using Microsoft.EntityFrameworkCore;
+using RegroupBackend.Services;
 using System.Security.Permissions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +19,9 @@ builder.Services.AddDbContext<RegroupBackend.Data.Persistence.RegroupDbContext>(
         builder.Configuration.GetConnectionString("RegroupSqlServer")
     )
 );
+
+builder.Services.AddScoped<InvitationService>();
+builder.Services.AddScoped<ChatRoomService>();
 
 var app = builder.Build();
 
